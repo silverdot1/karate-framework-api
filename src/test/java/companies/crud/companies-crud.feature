@@ -1,7 +1,7 @@
 Feature: Company crud
   As an Admin user
   I want to create, list, edit and delete a company
-  So that
+  So that I can check the company creation workflow
   Background:
     * url baseUrl
     * path "/companies"
@@ -27,7 +27,7 @@ Feature: Company crud
     And request {"name":#(name),"description": #(characters)}
     When method put
     Then status 200
-    #DELETE
+    # DELETE
     Given path "companies/" + companyId
     When method delete
     Then status 200

@@ -3,6 +3,7 @@ package helpers;
 import com.github.javafaker.Faker;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class DataGenerator {
     private static final Faker faker = new Faker();
@@ -40,5 +41,10 @@ public class DataGenerator {
         int pickValue = random.nextInt(value.length);
         return value[pickValue];
     }
+
+    public static String parseUUIDToString(UUID value){
+        return value.toString();
+    }
+
 
 }

@@ -19,7 +19,7 @@ public class ManagementTest {
     // parallel: number of threads to execute
     @Test
     void testParallelCucumberReport(){
-        Results results =  Runner.path("classpath:companies").outputCucumberJson(true).tags("~@ignore").parallel(4);
+        Results results =  Runner.path("classpath:companies").outputCucumberJson(true).tags("~@ignore").parallel(0);
         generateReport(results.getReportDir());
     }
     public static void generateReport(String karateOutputPath){

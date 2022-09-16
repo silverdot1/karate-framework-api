@@ -1,6 +1,6 @@
 Feature:  Get a company
 
-  Scenario: Get a company by id
+  Scenario: Get a company by id and validate by payload on feature
     * call read("../companies-reusable.feature@CreateCompany")
     Given url baseUrl
     And path "companies/"+ companyId
@@ -8,12 +8,24 @@ Feature:  Get a company
     Then status 200
     And match response contains {"id": '#string',"createdAt":'#string',"updatedAt": '#string',name:'#string', description: '#string',status: '#number'}
 
+  Scenario: Get a company by id and validate by a schema .json
+    * call read("../companies-reusable.feature@CreateCompany")
+    * def companyJson = read("../company.json")
+    Given url baseUrl
+    And path "companies/"+ companyId
+    When method get
+    Then status 200
+    And match response contains companyJson
+
+
   Scenario: Get 400 bad request company by sending a wrong company Id
     * call read("../companies-reusable.feature@CreateCompany")
+    * def errorJsonStructure = read("../../helpers/error-message.json")
     Given url baseUrl
     And path "companies/"+ companyId + "123"
     When method get
     Then status 400
+    And match response contains errorJsonStructure
 
 
   Scenario: Get a list of companies
@@ -21,20 +33,13 @@ Feature:  Get a company
     And path "companies/"
     When method get
     Then status 200
-    And match response.* contains {"id": '#string',"createdAt":'#string',"updatedAt": '#string',name:'#string', description: '#string',status: '#number'}
+    And match response.* contains {"id": '#string',"createdAt":'#string',"updatedAt": '#string',name:'#string', description: '#string',status: '#number? _ > 0'}
 
-
-  @ignore
-  Scenario: Get a list of companies
-    Given url baseUrl
-    And path "companies/"
-    When method get
-    Then status 200
-    And match response.* contains {"id": '#string',"createdAt":'#string',"updatedAt": '#string',name:'#string', description: '#string',status: '#number'}
-
-
-    # since the DbUtils returns a Java Map, it becomes normal JSON here !
-    # which means that you can use the full power of Karate's 'match' syntax
-    * def dogs = db.readRows('SELECT * FROM public.company')
-    * match dogs contains { ID: '#(id)', NAME: 'Scooby' }
+# It fails because the status expected should be 1
+#  Scenario: Get a list of companies
+#    Given url baseUrl
+#    And path "companies/"
+#    When method get
+#    Then status 200
+#    And match response.* contains {"id": '#string',"createdAt":'#string',"updatedAt": '#string',name:'#string', description: '#string',status: '#number? _ = 0'}
 
